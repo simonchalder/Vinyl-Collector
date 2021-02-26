@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace Vinyl_Collector
 {
@@ -20,7 +21,9 @@ namespace Vinyl_Collector
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Record> recordTable = new List<Record>();
+        StringBuilder csvContent = new StringBuilder();
+        string filePath = @"C:\Users\chald\source\repos\Vinyl Collector\dataTable.csv";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -31,18 +34,20 @@ namespace Vinyl_Collector
         {
             Record newRecord = new Record(titleTextBox.Text, artistTextBox.Text, labelTextBox.Text, yearTextBox.Text, lengthTextBox.Text);
 
-            recordTable.Add(newRecord);
+            csvContent.AppendLine($"{newRecord.title}, {newRecord.artist}, {newRecord.label}, {newRecord.year}, {newRecord.length}");
+
+            File.AppendAllText(filePath, csvContent.ToString());
             //Console.WriteLine(newRecord.title);
             //Console.WriteLine(newRecord.artist);
             //Console.WriteLine(newRecord.label);
             //Console.WriteLine(newRecord.year);
             //Console.WriteLine(newRecord.length);
-            int count = 0;
-            foreach (Record line in recordTable)
-            {
-                Console.WriteLine($"{recordTable[count].title} {recordTable[count].artist} {recordTable[count].label} {recordTable[count].year} {recordTable[count].length}");
-                count++;
-            }
+            //int count = 0;
+            //foreach (string line in recordTable)
+            //{
+            //    recordList.Text = ($"{recordTable[count]}");
+            //    count++;
+            //}
             Console.ReadLine();
         }
 
