@@ -3,6 +3,7 @@ from tinydb import TinyDB, Query
 import PyQt5.QtWidgets as qtw 
 import PyQt5.QtGui as qtg
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem, QDialog, QApplication
+import time
 
 db = TinyDB('./db/db.json')
 Record = Query()
@@ -68,7 +69,7 @@ class MainWindow(qtw.QWidget):
 
         collection_table = qtw.QTableWidget(self)
         collection_table.setColumnCount(8)
-        collection_table.setRowCount(len(db.all())+1)
+        collection_table.setRowCount(len(db.all())+2)
         collection_table.setColumnWidth(0, 200)
         collection_table.setColumnWidth(1, 200)
         collection_table.setColumnWidth(2, 120)
@@ -103,14 +104,21 @@ class MainWindow(qtw.QWidget):
             newRecord["Artist"] = rec_artist.text()
             newRecord["Title"] = rec_title.text()
             newRecord["Label"] = rec_label.text()
-            newRecord["Catalogue No."] = rec_cat_num.text()
+            newRecord["Catalogue_No"] = rec_cat_num.text()
             newRecord["Genre"] = rec_genre.text()
             newRecord["Format"] = rec_format.currentText()
             newRecord["Country"] = rec_country.text()
             newRecord["Year"] = rec_year.text()
             db.insert(newRecord)
-            collection_table.setRowCount(len(db.all())+1)
+            collection_table.setRowCount(len(db.all()))
             showCollection()
+            rec_artist.setText('')
+            rec_title.setText('')
+            rec_label.setText('')
+            rec_cat_num.setText('')
+            rec_genre.setText('')
+            rec_country.setText('')
+            rec_year.setText('')
         
         def showCollection():
             tablerow = 0
@@ -130,6 +138,8 @@ class MainWindow(qtw.QWidget):
         def clickCell(row, column):
             row = row
             column = column
+            global cell_type
+            cell_type = column
             cell = collection_table.item(row, column)
             global cell_text
             cell_text = cell.text()
@@ -137,10 +147,34 @@ class MainWindow(qtw.QWidget):
         
         def delRecord():
             global cell_text
-            search = db.search(Record.artist == cell_text)
-            # db.remove(search)
-            print(search)
-        
+            global cell_type
+            if cell_type == 0:
+                db.remove(Record.Artist == cell_text)
+                
+            elif cell_type == 1:
+                db.remove(Record.Title == cell_text)
+
+            elif cell_type == 2:
+                db.remove(Record.Label == cell_text)
+
+            elif cell_type == 3:
+                db.remove(Record.Catalogue_No == cell_text)
+
+            elif cell_type == 4:
+                db.remove(Record.Genre == cell_text)
+
+            elif cell_type == 5:
+                db.remove(Record.Format == cell_text)
+
+            elif cell_type == 6:
+                db.remove(Record.Country == cell_text)
+
+            else:
+                db.remove(Record.Format == cell_text)
+
+            collection_table.clearContents()
+            collection_table.setRowCount(len(db.all()))
+            showCollection()
         
         showCollection()
         collection_table.cellClicked.connect(clickCell)
