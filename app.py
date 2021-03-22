@@ -5,8 +5,8 @@ import PyQt5.QtGui as qtg
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem, QDialog, QApplication
 
 db = TinyDB('./db/db.json')
-
 Record = Query()
+cell_text = ''
 
 class MainWindow(qtw.QWidget):
     def __init__(self):
@@ -63,6 +63,9 @@ class MainWindow(qtw.QWidget):
         refreshButton = qtw.QPushButton("Refresh", clicked = lambda: showCollection())
         self.layout().addWidget(refreshButton)
 
+        deleteButton = qtw.QPushButton("Delete Selected", clicked = lambda: delRecord())
+        self.layout().addWidget(deleteButton)
+
         collection_table = qtw.QTableWidget(self)
         collection_table.setColumnCount(8)
         collection_table.setRowCount(len(db.all())+1)
@@ -89,6 +92,7 @@ class MainWindow(qtw.QWidget):
         form_layout.addRow(submitButton)
         form_layout.addRow(refreshButton)
         form_layout.addRow(collection_table)
+        form_layout.addRow(deleteButton)
         
         self.show()
         
@@ -122,8 +126,24 @@ class MainWindow(qtw.QWidget):
                 collection_table.setItem(tablerow, 6, qtw.QTableWidgetItem(line[6]))
                 collection_table.setItem(tablerow, 7, qtw.QTableWidgetItem(line[7]))
                 tablerow+=1
-    
+
+        def clickCell(row, column):
+            row = row
+            column = column
+            cell = collection_table.item(row, column)
+            global cell_text
+            cell_text = cell.text()
+            return cell_text
+        
+        def delRecord():
+            global cell_text
+            search = db.search(Record.artist == cell_text)
+            # db.remove(search)
+            print(search)
+        
+        
         showCollection()
+        collection_table.cellClicked.connect(clickCell)
 
 app = qtw.QApplication([])
 
