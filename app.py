@@ -204,12 +204,54 @@ class MainWindow(qtw.QWidget):
                 db.remove(Record.Country == cell_text)
 
             else:
-                db.remove(Record.Format == cell_text)
+                db.remove(Record.Year == cell_text)
 
             collection_table.clearContents()
             collection_table.setRowCount(len(db.all()))
             showCollection()
-        
+
+        def editRecord():
+            global cell_text
+            global cell_type
+            if cell_type == 0:
+                search = db.search(Record.Artist == cell_text)
+                
+            elif cell_type == 1:
+                search = db.search(Record.Title == cell_text)
+
+            elif cell_type == 2:
+                search = db.search(Record.Label == cell_text)
+
+            elif cell_type == 3:
+                search = db.search(Record.Catalogue_No == cell_text)
+
+            elif cell_type == 4:
+                search = db.search(Record.Genre == cell_text)
+
+            elif cell_type == 5:
+                search = db.search(Record.Format == cell_text)
+
+            elif cell_type == 6:
+                search = db.search(Record.Country == cell_text)
+
+            else:
+                search = db.search(Record.Year == cell_text)
+            
+            rec_artist.setText(search[0]["Artist"])
+            rec_title.setText(search[0]["Title"])
+            rec_label.setText(search[0]["Label"])
+            rec_cat_num.setText(search[0]["Catalogue_No"]) 
+            rec_genre.setText(search[0]["Genre"])  
+            rec_country.setText(search[0]["Country"])
+            rec_year.setText(search[0]["Year"])
+
+            db.remove(Record.Title == search[0]['Title'])
+
+
+
+
+
+
         showCollection()
         collection_table.cellClicked.connect(clickCell)
 
