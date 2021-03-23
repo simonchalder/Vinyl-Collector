@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from tinydb import TinyDB, Query
 import PyQt5.QtWidgets as qtw 
 import PyQt5.QtGui as qtg
-from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem, QDialog, QApplication
+from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem, QDialog, QApplication, QGridLayout, QWidget
 import time
 
 db = TinyDB('./db/db.json')
@@ -14,35 +14,51 @@ class MainWindow(qtw.QWidget):
         super().__init__()
         # Add title
         self.setWindowTitle("Vinyl Collector")
-        self.setFixedWidth(1024)
+        self.setFixedWidth(1050)
         self.setFixedHeight(600)
 
         # Set layout
-        form_layout = qtw.QFormLayout()
+        form_layout = qtw.QGridLayout()
         self.setLayout(form_layout)
 
         # Title label
 
-        title_label = qtw.QLabel("Vinyl Collector")
-        title_label.setFont(qtg.QFont('Helvetica', 18)) # Change font
-        self.layout().addWidget(title_label)
+        # title_label = qtw.QLabel("Vinyl Collector")
+        # title_label.setFont(qtg.QFont('Helvetica', 18)) # Change font
+        # self.layout().addWidget(title_label)
 
-        # Stock Code Entry Box
+        artist_label = qtw.QLabel("Artist")
+        self.layout().addWidget(artist_label)
 
         rec_artist = qtw.QLineEdit()
         self.layout().addWidget(rec_artist)
+
+        title_label = qtw.QLabel("Title")
+        self.layout().addWidget(title_label)
         
         rec_title = qtw.QLineEdit()
         self.layout().addWidget(rec_title)
 
+        label_label = qtw.QLabel("Label")
+        self.layout().addWidget(label_label)
+
         rec_label = qtw.QLineEdit()
         self.layout().addWidget(rec_label)
+
+        catno_label = qtw.QLabel("Catalogue Number")
+        self.layout().addWidget(catno_label)
 
         rec_cat_num = qtw.QLineEdit()
         self.layout().addWidget(rec_cat_num)
 
+        genre_label = qtw.QLabel("Genre")
+        self.layout().addWidget(genre_label)
+
         rec_genre = qtw.QLineEdit()
         self.layout().addWidget(rec_genre)
+
+        format_label = qtw.QLabel("Format")
+        self.layout().addWidget(format_label)
 
         rec_format = qtw.QComboBox()
         rec_format.addItem("LP")
@@ -50,8 +66,14 @@ class MainWindow(qtw.QWidget):
         rec_format.addItem("Single")
         self.layout().addWidget(rec_format)
 
+        country_label = qtw.QLabel("Country")
+        self.layout().addWidget(country_label)
+
         rec_country = qtw.QLineEdit()
         self.layout().addWidget(rec_country)
+
+        year_label = qtw.QLabel("Year")
+        self.layout().addWidget(year_label)
 
         rec_year = qtw.QLineEdit()
         self.layout().addWidget(rec_year)
@@ -67,9 +89,13 @@ class MainWindow(qtw.QWidget):
         deleteButton = qtw.QPushButton("Delete Selected", clicked = lambda: delRecord())
         self.layout().addWidget(deleteButton)
 
+        editButton = qtw.QPushButton("Edit Selected", clicked = lambda: editRecord())
+        self.layout().addWidget(editButton)
+
         collection_table = qtw.QTableWidget(self)
         collection_table.setColumnCount(8)
-        collection_table.setRowCount(len(db.all())+2)
+        collection_table.setRowCount(len(db.all())+1)
+        collection_table.setHorizontalHeaderLabels(["Artist", "Title", "Label", "Cat No.", "Genre", "Format", "Country", "Year"])
         collection_table.setColumnWidth(0, 200)
         collection_table.setColumnWidth(1, 200)
         collection_table.setColumnWidth(2, 120)
@@ -81,19 +107,27 @@ class MainWindow(qtw.QWidget):
         self.layout().addWidget(collection_table)        
 
         # Row Allocation
-
-        form_layout.addRow("Artist: ", rec_artist)
-        form_layout.addRow("Title: ", rec_title)
-        form_layout.addRow("Label: ", rec_label)
-        form_layout.addRow("Cat No: ", rec_cat_num)
-        form_layout.addRow("Genre: ", rec_genre)
-        form_layout.addRow("Format: ", rec_format)
-        form_layout.addRow("Country: ", rec_country)
-        form_layout.addRow("Year: ", rec_year)
-        form_layout.addRow(submitButton)
-        form_layout.addRow(refreshButton)
-        form_layout.addRow(collection_table)
-        form_layout.addRow(deleteButton)
+        form_layout.addWidget(artist_label, 0, 0)
+        form_layout.addWidget(title_label, 0, 1)
+        form_layout.addWidget(rec_artist, 1, 0)
+        form_layout.addWidget(rec_title, 1, 1)
+        form_layout.addWidget(label_label, 2, 0)
+        form_layout.addWidget(catno_label, 2, 1)
+        form_layout.addWidget(rec_label, 3, 0)
+        form_layout.addWidget(rec_cat_num, 3, 1)
+        form_layout.addWidget(genre_label, 4, 0)
+        form_layout.addWidget(format_label, 4, 1)
+        form_layout.addWidget(rec_genre, 5, 0)
+        form_layout.addWidget(rec_format, 5, 1)
+        form_layout.addWidget(country_label, 6, 0)
+        form_layout.addWidget(year_label, 6, 1)
+        form_layout.addWidget(rec_country, 7, 0)
+        form_layout.addWidget(rec_year, 7, 1)
+        form_layout.addWidget(editButton, 8, 0)
+        form_layout.addWidget(submitButton, 8, 1)
+        form_layout.addWidget(refreshButton, 10, 0)
+        form_layout.addWidget(collection_table, 9, 0, 1, 2)
+        form_layout.addWidget(deleteButton, 10, 1)
         
         self.show()
         

@@ -23,9 +23,9 @@ Add any vinyl release with the following fields:
 - Genre
 - Format
 - Country
- - Year of Release
+- Year of Release
 
- Delete a record
+Delete a record
 
 ***Issues / still to-do:***
 
