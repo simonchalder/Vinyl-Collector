@@ -1,18 +1,24 @@
+# Imports
+
 from dotenv import load_dotenv
 from tinydb import TinyDB, Query
 import PyQt5.QtWidgets as qtw 
 import PyQt5.QtGui as qtg
-from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem, QDialog, QApplication, QGridLayout, QWidget
-import time
 
+
+# Globals 
 db = TinyDB('./db/db.json')
 Record = Query()
 cell_text = ''
 
+# Class Definition
+
 class MainWindow(qtw.QWidget):
     def __init__(self):
         super().__init__()
-        # Add title
+        
+        # Main window title and dimensions
+
         self.setWindowTitle("Vinyl Collector")
         self.setFixedWidth(1050)
         self.setFixedHeight(600)
@@ -21,60 +27,84 @@ class MainWindow(qtw.QWidget):
         form_layout = qtw.QGridLayout()
         self.setLayout(form_layout)
 
-        # Title label
+        # Label style variables
+        label_font = 'Helvetica'
+        label_size = 12
 
-        # title_label = qtw.QLabel("Vinyl Collector")
-        # title_label.setFont(qtg.QFont('Helvetica', 18)) # Change font
-        # self.layout().addWidget(title_label)
+        # Widget creation -----------------------------------------------------------------------------------
 
+        # Artist Label
         artist_label = qtw.QLabel("Artist")
+        artist_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(artist_label)
 
+        #Artist input box
         rec_artist = qtw.QLineEdit()
         self.layout().addWidget(rec_artist)
 
+        # Title Label
         title_label = qtw.QLabel("Title")
+        title_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(title_label)
         
+        # Title input box
         rec_title = qtw.QLineEdit()
         self.layout().addWidget(rec_title)
 
+        # Label label!
         label_label = qtw.QLabel("Label")
+        label_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(label_label)
 
+        # Label input box
         rec_label = qtw.QLineEdit()
         self.layout().addWidget(rec_label)
 
+        # Catno label
         catno_label = qtw.QLabel("Catalogue Number")
+        catno_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(catno_label)
 
+        # Catno input box
         rec_cat_num = qtw.QLineEdit()
         self.layout().addWidget(rec_cat_num)
 
+        #Genre label
         genre_label = qtw.QLabel("Genre")
+        genre_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(genre_label)
 
+        #Genre input box
         rec_genre = qtw.QLineEdit()
         self.layout().addWidget(rec_genre)
 
+        #Format label
         format_label = qtw.QLabel("Format")
+        format_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(format_label)
 
+        #Format combobox
         rec_format = qtw.QComboBox()
         rec_format.addItem("LP")
         rec_format.addItem("Double Album")
         rec_format.addItem("Single")
         self.layout().addWidget(rec_format)
 
+        # Country label
         country_label = qtw.QLabel("Country")
+        country_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(country_label)
 
+        # Country input box
         rec_country = qtw.QLineEdit()
         self.layout().addWidget(rec_country)
 
+        #Year label
         year_label = qtw.QLabel("Year")
+        year_label.setFont(qtg.QFont(label_font, label_size))
         self.layout().addWidget(year_label)
 
+        # Year input box
         rec_year = qtw.QLineEdit()
         self.layout().addWidget(rec_year)
 
@@ -83,14 +113,22 @@ class MainWindow(qtw.QWidget):
         submitButton = qtw.QPushButton("Submit", clicked = lambda: submitButtonClick())
         self.layout().addWidget(submitButton)
 
+        # Refresh Button
+        
         refreshButton = qtw.QPushButton("Refresh", clicked = lambda: showCollection())
         self.layout().addWidget(refreshButton)
 
+        # Delete Button
+        
         deleteButton = qtw.QPushButton("Delete Selected", clicked = lambda: delRecord())
         self.layout().addWidget(deleteButton)
 
+        # Edit Button
+        
         editButton = qtw.QPushButton("Edit Selected", clicked = lambda: editRecord())
         self.layout().addWidget(editButton)
+
+        # Table creation, header labels and row widths
 
         collection_table = qtw.QTableWidget(self)
         collection_table.setColumnCount(8)
@@ -103,10 +141,11 @@ class MainWindow(qtw.QWidget):
         collection_table.setColumnWidth(4, 100)
         collection_table.setColumnWidth(5, 100)
         collection_table.setColumnWidth(6, 100)
-        collection_table.setColumnWidth(7, 100)
+        collection_table.setColumnWidth(7, 80)
         self.layout().addWidget(collection_table)        
 
-        # Row Allocation
+        # Table Row & Column Allocations
+
         form_layout.addWidget(artist_label, 0, 0)
         form_layout.addWidget(title_label, 0, 1)
         form_layout.addWidget(rec_artist, 1, 0)
@@ -133,9 +172,9 @@ class MainWindow(qtw.QWidget):
         
         # Define functions after show()
 
-        def submitButtonClick():
-            newRecord = {}
-            newRecord["Artist"] = rec_artist.text()
+        def submitButtonClick(): # Function called when submit button clicked
+            newRecord = {} # Create new empty dictionary 'newRecord'
+            newRecord["Artist"] = rec_artist.text() # Take text from input boxes and store in dictionary
             newRecord["Title"] = rec_title.text()
             newRecord["Label"] = rec_label.text()
             newRecord["Catalogue_No"] = rec_cat_num.text()
@@ -143,10 +182,10 @@ class MainWindow(qtw.QWidget):
             newRecord["Format"] = rec_format.currentText()
             newRecord["Country"] = rec_country.text()
             newRecord["Year"] = rec_year.text()
-            db.insert(newRecord)
-            collection_table.setRowCount(len(db.all()))
-            showCollection()
-            rec_artist.setText('')
+            db.insert(newRecord) # Add the contents of the newRecord object to the database
+            collection_table.setRowCount(len(db.all())) # Set number of table rows equal to the number of records in the database
+            showCollection() # Call the showCollection function
+            rec_artist.setText('') # Clear text from input boxes
             rec_title.setText('')
             rec_label.setText('')
             rec_cat_num.setText('')
@@ -154,11 +193,11 @@ class MainWindow(qtw.QWidget):
             rec_country.setText('')
             rec_year.setText('')
         
-        def showCollection():
-            tablerow = 0
-            results = db.all()
+        def showCollection(): # Functiona called when refresh button is clicked or called elsewhere
+            tablerow = 0 # Create table row number to iterate through table
+            results = db.all() # create 'results' object containing all database entries
             for item in results:
-                line = list(item.values())
+                line = list(item.values()) # Iterate through table inserting database records into table
                 collection_table.setItem(tablerow, 0, qtw.QTableWidgetItem(line[0]))
                 collection_table.setItem(tablerow, 1, qtw.QTableWidgetItem(line[1]))
                 collection_table.setItem(tablerow, 2, qtw.QTableWidgetItem(line[2]))
@@ -169,7 +208,7 @@ class MainWindow(qtw.QWidget):
                 collection_table.setItem(tablerow, 7, qtw.QTableWidgetItem(line[7]))
                 tablerow+=1
 
-        def clickCell(row, column):
+        def clickCell(row, column): # Function called by signal when the mouse is clicked on a table cell. Identifies which cell was clicked and the text in that cell
             row = row
             column = column
             global cell_type
@@ -179,8 +218,8 @@ class MainWindow(qtw.QWidget):
             cell_text = cell.text()
             return cell_text
         
-        def delRecord():
-            global cell_text
+        def delRecord(): # Function called when the delete button is clicked
+            global cell_text # Takes variables from the clickCell function, identifies which column was clicked on, then removes the corresponding database entry
             global cell_type
             if cell_type == 0:
                 db.remove(Record.Artist == cell_text)
@@ -206,11 +245,11 @@ class MainWindow(qtw.QWidget):
             else:
                 db.remove(Record.Year == cell_text)
 
-            collection_table.clearContents()
+            collection_table.clearContents() # Clear table before reloading database - seems to help table refresh
             collection_table.setRowCount(len(db.all()))
             showCollection()
 
-        def editRecord():
+        def editRecord(): # Function called when edit button is clicked. Uses clickCell function data to identify cell as with delRrecord but then populates entry boxes with database entry
             global cell_text
             global cell_type
             if cell_type == 0:
@@ -245,17 +284,20 @@ class MainWindow(qtw.QWidget):
             rec_country.setText(search[0]["Country"])
             rec_year.setText(search[0]["Year"])
 
-            db.remove(Record.Title == search[0]['Title'])
+            db.remove(Record.Title == search[0]['Title']) # Deletes database entry after inputs are populated but does not refresh table until new record is submitted
 
 
-
-
-
-
+# Functin call to populate table on app startup
         showCollection()
+
+# Signal creation for clickCell function
         collection_table.cellClicked.connect(clickCell)
 
+# QApplication creation
 app = qtw.QApplication([])
+
+# Set style
+app.setStyle('Oxygen')
 
 mw = MainWindow()
 

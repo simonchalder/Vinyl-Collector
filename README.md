@@ -12,6 +12,8 @@ Vinyl Collector is a cataloguing application for collectors of vinyl records
 
 The application has been re-written in Python using PyQt5 for the GUI and tinyDB for file based non-SQL database management
 
+![screen](https://user-images.githubusercontent.com/66743889/112154549-4c0e3e80-8bdc-11eb-8f41-6c361b227f9c.png)
+
 ***The user can now:***
 
 Add any vinyl release with the following fields:
@@ -25,7 +27,9 @@ Add any vinyl release with the following fields:
 - Country
 - Year of Release
 
-Delete a record
+Delete a record by clicking on the record in the table and then pressing the delete button
+
+Edit a record and then re-save to the database
 
 ***Issues / still to-do:***
 
