@@ -37,6 +37,8 @@ Add more fields
 
 Aesthetic changes and improvements to the GUI
 
+Add sorting functionailty to the app table
+
 Possibly add API integration so that users can lookup information about a record. This functionailty is available through one of my other projects 'Record Data Finder' but I may integrate the two.
 
 Testing
